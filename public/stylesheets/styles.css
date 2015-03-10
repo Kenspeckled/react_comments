@@ -1005,9 +1005,6 @@ a {
   user-select: none; }
 
 body {
-  width: 500px;
-  margin: 20px auto;
-  font: 16px/1.4 Arial, sans-serif;
   background: #f3eee9; }
 
 p {
