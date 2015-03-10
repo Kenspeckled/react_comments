@@ -7,10 +7,15 @@ cache = require 'gulp-cached'
 
 gulp.task 'libs', ->
   gulp.src [
-    'bower_components/lodash/lodash.min.js'
-    'bower_components/react/react.min.js'
+    'bower_components/es6-shim/es6-shim.min.js'
+    'bower_components/lodash/lodash.js'
+    'bower_components/react/react.js'
   ]
   .pipe concat 'libs.js'
+  .pipe gulp.dest 'public'
+  gulp.src [
+    'bower_components/es6-shim/es6-shim.map'
+  ]
   .pipe gulp.dest 'public'
 
 gulp.task 'assets', ->

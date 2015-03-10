@@ -7,27 +7,8 @@ html
     .container
       .row
         .col-sm-12
-          section.comments
-            article.comment
-              a.comment-img href="#non" 
-                img alt="" height="50" src="http://lorempixum.com/50/50/people/1" width="50" /
-              .comment-body
-                .text
-                  p Hello, this is an example comment
-                p.attribution
-                  | by
-                  a href="#non"  Joe Bloggs
-                  | at 14:23pm, 4th Dec 2010
-            article.comment
-              a.comment-img href="#non" 
-                img alt="" height="50" src="http://lorempixum.com/50/50/people/7" width="50" /
-              .comment-body
-                .text
-                  p This is a much longer one that will go on for a few lines.
-                  p It has multiple paragraphs and is full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end.
-                p.attribution
-                  | by
-                  a href="#non"  Joe Bloggs
-                  | at 14:23pm, 4th Dec 2010
+          #content
 
-
+    // React components must apper after their containers
+    script src="components/comments/commentBox.js"
+    script src="components/comments/commentList.js"
