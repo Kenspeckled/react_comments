@@ -1,0 +1,34 @@
+{
+  "name": "react_comments_demo",
+  "version": "0.0.1",
+  "description": "React.js demo",
+  "main": "gulpfile.js",
+  "devDependencies": {
+    "coffee-script": "^1.9.1",
+    "gulp": "^3.8.11",
+    "gulp-cache": "^0.2.8",
+    "gulp-coffee": "^2.3.1",
+    "gulp-concat": "^2.5.2",
+    "gulp-sass": "^1.3.3",
+    "gulp-slim": "0.0.13",
+    "http-server": "^0.7.5",
+    "karma": "^0.12.31"
+  },
+  "scripts": {
+    "postinstall": "bower install",
+    "prestart": "npm install",
+    "start": "http-server -a 0.0.0.0 -p 8000",
+    "pretest": "npm install",
+    "test": "node node_modules/karma/bin/karma start test/karma.conf.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kenspeckled/react_comments.git"
+  },
+  "author": "Kenspeckle",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Kenspeckled/react_comments/issues"
+  },
+  "homepage": "https://github.com/Kenspeckled/react_comments"
+}

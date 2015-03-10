@@ -7,16 +7,25 @@ cache = require 'gulp-cached'
 
 gulp.task 'libs', ->
   gulp.src [
-    'bower_components/lodash/lodash.js'
+    'bower_components/lodash/lodash.min.js'
+    'bower_components/react/react.min.js'
   ]
   .pipe concat 'libs.js'
   .pipe gulp.dest 'public'
 
 gulp.task 'assets', ->
-  gulp.src 'app/assets/images/**/*'
-  .pipe gulp.dest 'public/assets/images'
-  gulp.src 'app/assets/fonts/**/*'
-  .pipe gulp.dest 'public/assets/fonts'
+  gulp.src 'assets/images/**/*'
+  .pipe gulp.dest 'public/images'
+  gulp.src 'assets/fonts/**/*'
+  .pipe gulp.dest 'public/fonts'
+
+gulp.task 'sass', ->
+  gulp.src 'assets/stylesheets/styles.sass'
+  .pipe sass(
+    indentedSyntax: true
+    outputStyle: 'nested'
+  )
+  .pipe gulp.dest 'public/stylesheets'
 
 gulp.task 'coffee', ->
   gulp.src 'app/**/*.coffee'
@@ -31,14 +40,6 @@ gulp.task 'slim', ->
     pretty: true
     options: "attr_list_delims={'(' => ')', '[' => ']'}"
     )
-  .pipe gulp.dest 'public'
-
-gulp.task 'sass', ->
-  gulp.src 'app/**/[^_]*.sass'
-  .pipe sass(
-    indentedSyntax: true
-    outputStyle: 'nested'
-  )
   .pipe gulp.dest 'public'
 
 # Add a watcher to change any files

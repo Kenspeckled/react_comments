@@ -1,0 +1,11 @@
+{
+  "name": "react_comments_demo",
+  "version": "0.0.1",
+  "description": "React.js demo",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "react": "~0.12.2",
+    "lodash": "~3.5.0"
+  }
+}
