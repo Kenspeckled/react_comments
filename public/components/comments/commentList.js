@@ -1,5 +1,5 @@
 (function() {
-  var CommentBox, CommentList, a, article, comments, div, h1, img, input, li, p, ref, section, ul;
+  var CommentBox, CommentForm, CommentList, a, article, comments, div, h1, img, input, li, p, ref, section, ul;
 
   comments = [
     {
@@ -46,7 +46,7 @@
           }));
         }
         return results;
-      })());
+      })(), React.createElement(CommentForm, null));
     }
   });
 
@@ -73,11 +73,27 @@
         className: "comment-body"
       }, div({
         className: "text"
-      }, p(null, this.props.comment)), p({
+      }, p(null, this.props.comment.comment)), p({
         className: "attribution"
       }, "by ", a({
         href: "#non"
-      }, "Joe Bloggs"), " at 14:11pm, 12th Aug 2014"))))));
+      }, this.props.comment.name), " at " + this.props.comment.date))))));
+    }
+  });
+
+  CommentForm = React.createClass({
+    displayName: 'CommentForm',
+    render: function() {
+      return div({
+        className: "row"
+      }, div({
+        className: "col-sm-12"
+      }, div({
+        className: "comment-input"
+      }, input({
+        type: "text",
+        name: "comment"
+      }, "Comment:"))));
     }
   });
 

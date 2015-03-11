@@ -27,14 +27,18 @@ comments = [
 
 {section, article, img, a, p, ul, li, div, h1, input} = React.DOM
 CommentList = React.createClass(
+#  getInitialState: ->
+#    comments: []
   displayName: 'CommentList',
   render: ->
     div null,
       for comment, index in comments 
         React.createElement(CommentBox, {comment: comment, index: index})
+      React.createElement(CommentForm, null)
+)
+
     
 
-)
 CommentBox = React.createClass(
   displayName: 'CommentBox',
   render: ->
@@ -46,12 +50,21 @@ CommentBox = React.createClass(
               img alt: "", height: "50", src: "http://lorempixum.com/50/50/people/" + @props.index, width: "50",
             div className: "comment-body",
               div className: "text",
-                p null, @props.comment,
+                p null, @props.comment.comment,
               p className: "attribution", "by ",
-                a href: "#non", "Joe Bloggs" 
-                " at 14:11pm, 12th Aug 2014"
-
+                a href: "#non", @props.comment.name 
+                " at " + @props.comment.date
 )
+
+CommentForm = React.createClass(
+  displayName: 'CommentForm',
+  render: ->
+    div className: "row",
+      div className: "col-sm-12",
+        div className: "comment-input",
+          input type: "text", name: "comment", "Comment:"
+)
+
 React.render(
   React.createElement(CommentList, null),
   document.getElementById('content')
