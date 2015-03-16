@@ -1,11 +1,11 @@
 gulp = require 'gulp'
 gutil = require 'gutil'
 coffee = require 'gulp-coffee'
+uglify = require 'gulp-uglify'
 slim = require 'gulp-slim'
 sass = require 'gulp-sass'
 concat = require 'gulp-concat'
 cache = require 'gulp-cached'
-watchify = require 'watchify'
 browserify = require 'browserify'
 source = require 'vinyl-source-stream'
 buffer = require 'vinyl-buffer'
@@ -26,15 +26,14 @@ gulp.task 'libs', ->
   .pipe gulp.dest 'public'
 
 gulp.task 'browserify', ->
-  bundler = watchify browserify './_app.main.coffee', {}
+  bundler = browserify('./_app.main.coffee', {})
   bundler.transform('coffeeify')
   bundle = ->
     bundler.bundle()
       .on('error', gutil.log.bind(gutil, 'Browserify Error'))
       .pipe source('app.main.js')
       .pipe buffer()
-        # Add transformation tasks to the pipeline here.
-        #.pipe uglify()
+      #.pipe uglify()
       .pipe gulp.dest 'public'
   bundle()
 
@@ -63,15 +62,15 @@ gulp.task 'slim', ->
   .pipe(cache('slim'))
   .pipe slim(
     pretty: true
-    options: "attr_list_delims={'(' => ')', '[' => ']'}"
     )
   .pipe gulp.dest 'public'
 
 # Add a watcher to change any files
 gulp.task 'watch', ->
-  gulp.watch 'app/**/*.coffee', ['coffee']
-  gulp.watch 'index.slim', ['slim']
+  gulp.watch 'app/**/*.coffee', ['browserify']
+  gulp.watch '_app.main.coffee', ['browserify']
   gulp.watch 'app/**/*.slim', ['slim']
+  gulp.watch 'index.slim', ['slim']
   gulp.watch 'app/**/*.sass', ['sass']
 
 # Default task will call all tasks created so far

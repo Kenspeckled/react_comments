@@ -1,4 +1,7 @@
-Comment = require('./app/models/comments/comment.coffee')
-c = new Comment
-console.log c.toString()
+CommentList = require('./app/components/comments/commentList.coffee')
+
+React.render(
+  React.createElement(CommentList, null),
+  document.getElementById('content')
+)
 
