@@ -1,5 +1,5 @@
 (function() {
-  var CommentBox, CommentForm, CommentList, a, article, comments, div, h1, img, input, li, p, ref, section, ul;
+  var CommentBox, CommentForm, CommentList, a, article, comments, div, form, h1, img, input, li, p, ref, section, ul;
 
   comments = [
     {
@@ -29,24 +29,38 @@
     }
   ];
 
-  ref = React.DOM, section = ref.section, article = ref.article, img = ref.img, a = ref.a, p = ref.p, ul = ref.ul, li = ref.li, div = ref.div, h1 = ref.h1, input = ref.input;
+  ref = React.DOM, form = ref.form, section = ref.section, article = ref.article, img = ref.img, a = ref.a, p = ref.p, ul = ref.ul, li = ref.li, div = ref.div, h1 = ref.h1, input = ref.input;
 
   CommentList = React.createClass({
+    getInitialState: function() {
+      return {
+        comments: comments
+      };
+    },
+    handleCommentSubmit: function(comment) {
+      comments.push(comment);
+      return this.setState({
+        comments: comments
+      });
+    },
     displayName: 'CommentList',
     render: function() {
       var comment, index;
       return div(null, (function() {
-        var i, len, results;
+        var i, len, ref1, results;
+        ref1 = this.state.comments;
         results = [];
-        for (index = i = 0, len = comments.length; i < len; index = ++i) {
-          comment = comments[index];
+        for (index = i = 0, len = ref1.length; i < len; index = ++i) {
+          comment = ref1[index];
           results.push(React.createElement(CommentBox, {
             comment: comment,
             index: index
           }));
         }
         return results;
-      })(), React.createElement(CommentForm, null));
+      }).call(this), React.createElement(CommentForm, {
+        onCommentSubmit: this.handleCommentSubmit
+      }));
     }
   });
 
@@ -83,17 +97,39 @@
 
   CommentForm = React.createClass({
     displayName: 'CommentForm',
+    handleSubmit: function(e) {
+      var comment, name;
+      e.preventDefault();
+      name = React.findDOMNode(this.refs.name).value.trim();
+      comment = React.findDOMNode(this.refs.comment).value.trim();
+      this.props.onCommentSubmit({
+        name: name,
+        comment: comment,
+        date: "14:43pm, 12th Dec 2014"
+      });
+      React.findDOMNode(this.refs.name).value = "";
+      return React.findDOMNode(this.refs.comment).value = "";
+    },
     render: function() {
       return div({
         className: "row"
       }, div({
         className: "col-sm-12"
-      }, div({
-        className: "comment-input"
+      }, form({
+        className: "commentForm",
+        onSubmit: this.handleSubmit
       }, input({
         type: "text",
-        name: "comment"
-      }, "Comment:"))));
+        ref: "comment",
+        placeholder: "Comment:"
+      }, input({
+        type: "text",
+        ref: "name",
+        placeholder: "Your Name:"
+      }, input({
+        type: "submit",
+        value: "Post"
+      }))))));
     }
   });
 

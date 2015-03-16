@@ -25,16 +25,21 @@ comments = [
 ]
 
 
-{section, article, img, a, p, ul, li, div, h1, input} = React.DOM
+{form, section, article, img, a, p, ul, li, div, h1, input} = React.DOM
 CommentList = React.createClass(
-#  getInitialState: ->
-#    comments: []
+  getInitialState: ->
+    comments: comments
+  handleCommentSubmit: (comment) ->
+    comments.push comment
+    @setState {comments: comments}
+
+
   displayName: 'CommentList',
   render: ->
     div null,
-      for comment, index in comments 
+      for comment, index in @state.comments 
         React.createElement(CommentBox, {comment: comment, index: index})
-      React.createElement(CommentForm, null)
+      React.createElement(CommentForm, onCommentSubmit: @handleCommentSubmit)
 )
 
     
@@ -58,11 +63,22 @@ CommentBox = React.createClass(
 
 CommentForm = React.createClass(
   displayName: 'CommentForm',
+  handleSubmit: (e) ->
+    e.preventDefault()
+    name = React.findDOMNode(@refs.name).value.trim()
+    comment = React.findDOMNode(@refs.comment).value.trim()
+#    date = React.findDOMNode(@refs.date).value.trim()
+    @props.onCommentSubmit({name: name, comment: comment, date: "14:43pm, 12th Dec 2014"})
+    React.findDOMNode(@refs.name).value = ""
+    React.findDOMNode(@refs.comment).value = ""
+  ,
   render: ->
     div className: "row",
       div className: "col-sm-12",
-        div className: "comment-input",
-          input type: "text", name: "comment", "Comment:"
+        form className: "commentForm", onSubmit: @handleSubmit,
+          input type: "text", ref: "comment", placeholder: "Comment:",
+          input type: "text", ref: "name", placeholder: "Your Name:",
+          input type: "submit", value: "Post"
 )
 
 React.render(
