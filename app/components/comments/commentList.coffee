@@ -57,7 +57,7 @@ CommentBox = React.createClass(
               div className: "text",
                 p null, @props.comment.comment,
               p className: "attribution", "by ",
-                a href: "#non", @props.comment.name 
+                a href: "#non", @props.comment.name
                 " at " + @props.comment.date
 )
 
@@ -67,10 +67,13 @@ CommentForm = React.createClass(
     e.preventDefault()
     name = React.findDOMNode(@refs.name).value.trim()
     comment = React.findDOMNode(@refs.comment).value.trim()
+    currentDate = new Date
+    date = currentDate.toLocaleTimeString('en-gb', hour: '2-digit', minute: '2-digit') +  ", " + currentDate.toLocaleDateString('en-gb', day: 'numeric', month: 'short', year: 'numeric')
 #    date = React.findDOMNode(@refs.date).value.trim()
-    @props.onCommentSubmit({name: name, comment: comment, date: "14:43pm, 12th Dec 2014"})
+    @props.onCommentSubmit({name: name, comment: comment, date: date})
     React.findDOMNode(@refs.name).value = ""
     React.findDOMNode(@refs.comment).value = ""
+    React.findDOMNode(@refs.comment).focus()
   ,
   render: ->
     div className: "row",

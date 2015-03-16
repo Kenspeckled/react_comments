@@ -98,17 +98,27 @@
   CommentForm = React.createClass({
     displayName: 'CommentForm',
     handleSubmit: function(e) {
-      var comment, name;
+      var comment, currentDate, date, name;
       e.preventDefault();
       name = React.findDOMNode(this.refs.name).value.trim();
       comment = React.findDOMNode(this.refs.comment).value.trim();
+      currentDate = new Date;
+      date = currentDate.toLocaleTimeString('en-gb', {
+        hour: '2-digit',
+        minute: '2-digit'
+      }) + ", " + currentDate.toLocaleDateString('en-gb', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      });
       this.props.onCommentSubmit({
         name: name,
         comment: comment,
-        date: "14:43pm, 12th Dec 2014"
+        date: date
       });
       React.findDOMNode(this.refs.name).value = "";
-      return React.findDOMNode(this.refs.comment).value = "";
+      React.findDOMNode(this.refs.comment).value = "";
+      return React.findDOMNode(this.refs.comment).focus();
     },
     render: function() {
       return div({
