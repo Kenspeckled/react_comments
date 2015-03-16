@@ -1,9 +1,16 @@
 gulp = require 'gulp'
+gutil = require 'gutil'
 coffee = require 'gulp-coffee'
 slim = require 'gulp-slim'
 sass = require 'gulp-sass'
 concat = require 'gulp-concat'
 cache = require 'gulp-cached'
+watchify = require 'watchify'
+browserify = require 'browserify'
+source = require 'vinyl-source-stream'
+buffer = require 'vinyl-buffer'
+coffeeify = require 'coffeeify'
+
 
 gulp.task 'libs', ->
   gulp.src [
@@ -17,6 +24,19 @@ gulp.task 'libs', ->
     'bower_components/es6-shim/es6-shim.map'
   ]
   .pipe gulp.dest 'public'
+
+gulp.task 'browserify', ->
+  bundler = watchify browserify './_app.main.coffee', {}
+  bundler.transform('coffeeify')
+  bundle = ->
+    bundler.bundle()
+      .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+      .pipe source('app.main.js')
+      .pipe buffer()
+        # Add transformation tasks to the pipeline here.
+        #.pipe uglify()
+      .pipe gulp.dest 'public'
+  bundle()
 
 gulp.task 'assets', ->
   gulp.src 'assets/images/**/*'
@@ -33,7 +53,7 @@ gulp.task 'sass', ->
   .pipe gulp.dest 'public/stylesheets'
 
 gulp.task 'coffee', ->
-  gulp.src ['app/**/*.coffee', 'server.coffee']
+  gulp.src ['server.coffee']
   .pipe(cache('coffee'))
   .pipe coffee()
   .pipe gulp.dest 'public'
@@ -55,4 +75,4 @@ gulp.task 'watch', ->
   gulp.watch 'app/**/*.sass', ['sass']
 
 # Default task will call all tasks created so far
-gulp.task 'default', ['libs', 'assets', 'coffee', 'slim', 'sass', 'watch']
+gulp.task 'default', ['browserify', 'libs', 'assets', 'coffee', 'slim', 'sass', 'watch']

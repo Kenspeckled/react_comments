@@ -29,7 +29,7 @@ module.exports = function(config){
 
     files : [
       'test/bind-polyfill.js', //PhantomJS ployfill
-      'public/**/*.js',
+      'public/libs.js',
       'test/**/*.coffee'
     ],
 

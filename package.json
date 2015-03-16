@@ -17,7 +17,13 @@
     "karma-jasmine": "^0.3.5",
     "karma-phantomjs-launcher": "^0.1.4",
     "express": "~4.12.2",
-    "gulp-cached": "~1.0.4"
+    "gulp-cached": "~1.0.4",
+    "coffeeify": "~1.0.0",
+    "vinyl-source-stream": "~1.1.0",
+    "vinyl-buffer": "~1.0.0",
+    "watchify": "~2.4.0",
+    "browserify": "~9.0.3",
+    "gutil": "~1.6.4"
   },
   "scripts": {
     "postinstall": "bower install",
