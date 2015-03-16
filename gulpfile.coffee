@@ -33,7 +33,7 @@ gulp.task 'sass', ->
   .pipe gulp.dest 'public/stylesheets'
 
 gulp.task 'coffee', ->
-  gulp.src 'app/**/*.coffee'
+  gulp.src ['app/**/*.coffee', 'server.coffee']
   .pipe(cache('coffee'))
   .pipe coffee()
   .pipe gulp.dest 'public'
