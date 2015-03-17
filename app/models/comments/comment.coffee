@@ -1,4 +1,6 @@
-class Comment
+Base = require '../baseClass.coffee'
+
+class Comment extends Base
   constructor: ->
     @comments = [
       comment: "This is a much longer one that will go on for a few lines.<br/>It has multiple paragraphs and is full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end."
