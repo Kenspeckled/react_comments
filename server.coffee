@@ -1,11 +1,9 @@
 express = require("express")
 app = express()
 
-app.get('/', (req, res) ->
-  res.send "hello world!"
-)
+app.use express.static('public')
 
-server = app.listen(3000, ->
+server = app.listen(8000, ->
   host = server.address().address
   port = server.address().port
 

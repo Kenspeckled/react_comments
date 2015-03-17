@@ -1,4 +1,4 @@
-CommentList = require('./app/components/comments/commentList.coffee')
+CommentList = require('./components/comments/commentList.coffee')
 
 React.render(
   React.createElement(CommentList, null),

@@ -27,12 +27,12 @@ gulp.task 'libs', ->
   .pipe gulp.dest 'public'
 
 gulp.task 'browserify', ->
-  bundler = browserify('./_app.main.coffee', {})
+  bundler = browserify('./app/application.coffee', {})
   bundler.transform('coffeeify')
   bundle = ->
     bundler.bundle()
       .on('error', gutil.log.bind(gutil, 'Browserify Error'))
-      .pipe source('app.main.js')
+      .pipe source('app.js')
       .pipe buffer()
       .pipe gulp.dest 'public'
       .pipe uglify()
