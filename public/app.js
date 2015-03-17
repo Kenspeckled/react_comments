@@ -156,10 +156,56 @@ module.exports = CommentList;
 
 
 
-},{"../../models/comments/comment.coffee":5,"./commentBox.coffee":2,"./commentForm.coffee":3}],5:[function(require,module,exports){
-var Comment;
+},{"../../models/comments/comment.coffee":6,"./commentBox.coffee":2,"./commentForm.coffee":3}],5:[function(require,module,exports){
+var Base,
+  slice = [].slice;
 
-Comment = (function() {
+Base = (function() {
+  function Base() {}
+
+  Base.include = function() {
+    var _prototype, args;
+    args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+    _prototype = this.prototype;
+    return args.forEach(function(module) {
+      var afterInclude, prop;
+      if (module.constructor !== Object) {
+        throw new Error('Arguments not an object or an array of objects');
+      }
+      afterInclude = _prototype.afterInclude;
+      for (prop in module) {
+        _prototype[prop] = module[prop];
+      }
+      if (afterInclude) {
+        return afterInclude(module);
+      }
+    });
+  };
+
+  return Base;
+
+})();
+
+module.exports = Base;
+
+
+
+},{}],6:[function(require,module,exports){
+var A, B, Base, Comment,
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
+
+Base = require('../baseClass.coffee');
+
+A = require('../modules/a.coffee');
+
+B = require('../modules/b.coffee');
+
+Comment = (function(superClass) {
+  extend(Comment, superClass);
+
+  Comment.include(A, B);
+
   function Comment() {
     this.comments = [
       {
@@ -202,9 +248,31 @@ Comment = (function() {
 
   return Comment;
 
-})();
+})(Base);
 
 module.exports = Comment;
+
+
+
+},{"../baseClass.coffee":5,"../modules/a.coffee":7,"../modules/b.coffee":8}],7:[function(require,module,exports){
+var A;
+
+A = {
+  a: 5
+};
+
+module.exports = A;
+
+
+
+},{}],8:[function(require,module,exports){
+var B;
+
+B = {
+  b: 8
+};
+
+module.exports = B;
 
 
 
