@@ -51,12 +51,6 @@ gulp.task 'sass', ->
   )
   .pipe gulp.dest 'public/stylesheets'
 
-gulp.task 'coffee', ->
-  gulp.src ['server.coffee']
-  .pipe(cache('coffee'))
-  .pipe coffee()
-  .pipe gulp.dest 'public'
-
 gulp.task 'slim', ->
   gulp.src ['app/**/[^_]*.slim', 'index.slim']
   .pipe(cache('slim'))
@@ -74,4 +68,4 @@ gulp.task 'watch', ->
   gulp.watch 'app/**/*.sass', ['sass']
 
 # Default task will call all tasks created so far
-gulp.task 'default', ['browserify', 'libs', 'assets', 'coffee', 'slim', 'sass', 'watch']
+gulp.task 'default', ['browserify', 'libs', 'assets', 'slim', 'sass', 'watch']

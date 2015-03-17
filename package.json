@@ -25,7 +25,7 @@
   "scripts": {
     "postinstall": "bower install",
     "prestart": "npm install",
-    "start": "http-server -a 0.0.0.0 -p 8000",
+    "start": "coffee server.coffee",
     "pretest": "npm install",
     "test": "jasmine-node --coffee --autotest --color --autotest spec/**/*.coffee"
   },
