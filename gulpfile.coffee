@@ -6,6 +6,7 @@ slim = require 'gulp-slim'
 sass = require 'gulp-sass'
 concat = require 'gulp-concat'
 cache = require 'gulp-cached'
+rename = require 'gulp-rename'
 browserify = require 'browserify'
 source = require 'vinyl-source-stream'
 buffer = require 'vinyl-buffer'
@@ -33,7 +34,9 @@ gulp.task 'browserify', ->
       .on('error', gutil.log.bind(gutil, 'Browserify Error'))
       .pipe source('app.main.js')
       .pipe buffer()
-      #.pipe uglify()
+      .pipe gulp.dest 'public'
+      .pipe uglify()
+      .pipe rename({suffix: '.min'})
       .pipe gulp.dest 'public'
   bundle()
 
@@ -49,6 +52,13 @@ gulp.task 'sass', ->
     indentedSyntax: true
     outputStyle: 'nested'
   )
+  .pipe gulp.dest 'public/stylesheets'
+  gulp.src 'assets/stylesheets/styles.sass'
+  .pipe sass(
+    indentedSyntax: true
+    outputStyle: 'compressed'
+  )
+  .pipe rename({suffix: '.min'})
   .pipe gulp.dest 'public/stylesheets'
 
 gulp.task 'slim', ->
