@@ -1,14 +1,16 @@
-pubSub = {
-  publish: (ev, args...) ->
+PubSub = {
+  moduleName: "PubSub"
+
+  broadcast: (ev, data) ->
     _callbackList = @_callbacks[ev]
     return this if !@hasOwnProperty(_callbacks) || !_callbackList
     _callbackList.forEach (fn) =>
-      fn.apply(this, args...)
+      fn.apply(this, data)
     return this
 
-  subscribe: (ev, fn) ->
+  listen: (ev, fn) ->
     @_callbacks = {} if !@hasOwnProperty(_callbacks)
     (@_callbacks[ev] || @_callbacks[ev] = []).push fn
     return this
 }
-module.exports = pubSub
+module.exports = PubSub
