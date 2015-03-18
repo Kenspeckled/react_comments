@@ -197,7 +197,7 @@ Base = (function() {
     return args.forEach(function(module) {
       var afterInclude, prop;
       if (module.constructor !== Object) {
-        throw new Error('Arguments not an object or an array of objects');
+        throw new Error('Arguments not an object or a list of objects');
       }
       for (prop in module) {
         if (prop !== 'moduleName') {
