@@ -1,5 +1,6 @@
-class Base
+PublishSubscribe = require './modules/pubSub.coffee'
 
+class Base
   @include = (args...) ->
     _prototype = @prototype
     args.forEach (module) ->
@@ -9,6 +10,8 @@ class Base
       for prop of module
         _prototype[prop] = module[prop]
       afterInclude(module) if afterInclude
+
+  @include PublishSubscribe
 
 module.exports = Base
 

@@ -157,8 +157,10 @@ module.exports = CommentList;
 
 
 },{"../../models/comments/comment.coffee":6,"./commentBox.coffee":2,"./commentForm.coffee":3}],5:[function(require,module,exports){
-var Base,
+var Base, PublishSubscribe,
   slice = [].slice;
+
+PublishSubscribe = require('./modules/pubSub.coffee');
 
 Base = (function() {
   function Base() {}
@@ -182,6 +184,8 @@ Base = (function() {
     });
   };
 
+  Base.include(PublishSubscribe);
+
   return Base;
 
 })();
@@ -190,21 +194,15 @@ module.exports = Base;
 
 
 
-},{}],6:[function(require,module,exports){
-var A, B, Base, Comment,
+},{"./modules/pubSub.coffee":7}],6:[function(require,module,exports){
+var Base, Comment,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
 Base = require('../baseClass.coffee');
 
-A = require('../modules/a.coffee');
-
-B = require('../modules/b.coffee');
-
 Comment = (function(superClass) {
   extend(Comment, superClass);
-
-  Comment.include(A, B);
 
   function Comment() {
     this.comments = [
@@ -254,25 +252,35 @@ module.exports = Comment;
 
 
 
-},{"../baseClass.coffee":5,"../modules/a.coffee":7,"../modules/b.coffee":8}],7:[function(require,module,exports){
-var A;
+},{"../baseClass.coffee":5}],7:[function(require,module,exports){
+var pubSub,
+  slice = [].slice;
 
-A = {
-  a: 5
+pubSub = {
+  publish: function() {
+    var _callbackList, args, ev;
+    ev = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
+    _callbackList = this._callbacks[ev];
+    if (!this.hasOwnProperty(_callbacks) || !_callbackList) {
+      return this;
+    }
+    _callbackList.forEach((function(_this) {
+      return function(fn) {
+        return fn.apply.apply(fn, [_this].concat(slice.call(args)));
+      };
+    })(this));
+    return this;
+  },
+  subscribe: function(ev, fn) {
+    if (!this.hasOwnProperty(_callbacks)) {
+      this._callbacks = {};
+    }
+    (this._callbacks[ev] || (this._callbacks[ev] = [])).push(fn);
+    return this;
+  }
 };
 
-module.exports = A;
-
-
-
-},{}],8:[function(require,module,exports){
-var B;
-
-B = {
-  b: 8
-};
-
-module.exports = B;
+module.exports = pubSub;
 
 
 
