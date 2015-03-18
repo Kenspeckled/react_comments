@@ -1,4 +1,5 @@
 Base = require '../baseClass.coffee'
+_ = require 'lodash'
 
 class Comment extends Base
 
@@ -30,7 +31,7 @@ class Comment extends Base
   ]
   @comments = _.map data, (c) ->
     return new Comment(c)
-    
+
   constructor: (obj) ->
     @name = obj.name
     @comment = obj.comment
@@ -47,7 +48,7 @@ class Comment extends Base
     newObject = new Comment(props)
     @comments.push newObject
     @broadcast('change')
-    
+
   @all = ->
     return @comments
 
