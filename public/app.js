@@ -164,30 +164,23 @@ Base = (function() {
     args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
     _class = this;
     return args.forEach(function(module) {
-      var afterExtend, prop;
+      var prop;
       if (module.constructor !== Object) {
-        throw new Error('Arguments not an object or an array of objects');
+        throw new Error('Arguments not an object or a list of objects');
+      }
+      if (!module.moduleName) {
+        throw new Error('Module defined without a name');
       }
       for (prop in module) {
         if (prop !== 'moduleName') {
           _class[prop] = module[prop];
         }
       }
-      afterExtend = _class.afterExtend;
-      if (afterExtend) {
-        return afterExtend(module);
+      if (!_class.extendedModules) {
+        _class.extendedModules = [];
       }
+      return _class.extendedModules.push(module.moduleName);
     });
-  };
-
-  Base.prototype.afterExtend = function(module) {
-    if (!module.moduleName) {
-      throw new Error('Module defined without a name');
-    }
-    if (!this.extendedModules) {
-      this.extendedModules = [];
-    }
-    return this.extendedModules.push(module.moduleName);
   };
 
   Base.include = function() {
@@ -195,30 +188,23 @@ Base = (function() {
     args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
     _class = this;
     return args.forEach(function(module) {
-      var afterInclude, prop;
+      var prop;
       if (module.constructor !== Object) {
         throw new Error('Arguments not an object or a list of objects');
+      }
+      if (!module.moduleName) {
+        throw new Error('Module defined without a name');
       }
       for (prop in module) {
         if (prop !== 'moduleName') {
           _class.prototype[prop] = module[prop];
         }
       }
-      afterInclude = _class.afterInclude;
-      if (afterInclude) {
-        return afterInclude(module);
+      if (!_class.includedModules) {
+        _class.includedModules = [];
       }
+      return _class.includedModules.push(module.moduleName);
     });
-  };
-
-  Base.prototype.afterInclude = function(module) {
-    if (!module.moduleName) {
-      throw new Error('Module defined without a name');
-    }
-    if (!this.includedModules) {
-      this.includedModules = [];
-    }
-    return this.includedModules.push(module.moduleName);
   };
 
   Base.extend(PublishSubscribe);
