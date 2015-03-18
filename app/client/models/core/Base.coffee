@@ -20,7 +20,7 @@ class Base
     _class = this
     args.forEach (module) ->
       if module.constructor != Object
-        throw new Error('Arguments not an object or an array of objects')
+        throw new Error('Arguments not an object or a list of objects')
       for prop of module
         _class.prototype[prop] = module[prop] unless prop == 'moduleName'
       afterInclude = _class.afterInclude
