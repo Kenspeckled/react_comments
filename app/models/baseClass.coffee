@@ -1,14 +1,30 @@
 PublishSubscribe = require './modules/pubSub.coffee'
 
 class Base
-  @include = (args...) ->
-    _prototype = @prototype
+  @extend = (args...) ->
+    _class = this
     args.forEach (module) ->
       if module.constructor != Object
         throw new Error('Arguments not an object or an array of objects')
       for prop of module
-        _prototype[prop] = module[prop] unless prop == 'moduleName'
-      afterInclude = _prototype.afterInclude
+        _class[prop] = module[prop] unless prop == 'moduleName'
+      afterExtend = _klass.afterExtend
+      afterExtend(module) if afterExtend
+
+  afterExtend: (module) ->
+    if !module.moduleName
+      throw new Error('Module defined without a name')
+    @extendedModules = [] if !@extendedModules
+    @extendedModules.push(module.moduleName)
+
+  @include = (args...) ->
+    _class = this
+    args.forEach (module) ->
+      if module.constructor != Object
+        throw new Error('Arguments not an object or an array of objects')
+      for prop of module
+        _class.prototype[prop] = module[prop] unless prop == 'moduleName'
+      afterInclude = _class.afterInclude
       afterInclude(module) if afterInclude
 
   afterInclude: (module) ->
@@ -17,7 +33,7 @@ class Base
     @includedModules = [] if !@includedModules
     @includedModules.push(module.moduleName)
 
-  @include PublishSubscribe
+  @extend PublishSubscribe
 
 module.exports = Base
 
