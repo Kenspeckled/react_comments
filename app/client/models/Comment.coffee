@@ -1,5 +1,5 @@
-_ = require 'lodash'
 Base = require '../Base.coffee'
+_ = require 'lodash'
 
 class Comment extends Base
 

@@ -300,7 +300,11 @@ module.exports = Base;
 
 
 
+<<<<<<< HEAD
 },{"./modules/pubSub.coffee":10}],9:[function(require,module,exports){
+=======
+},{"./modules/pubSub.coffee":7}],6:[function(require,module,exports){
+>>>>>>> Require lodash
 var Base, Comment, _,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -308,6 +312,8 @@ var Base, Comment, _,
 _ = require('lodash');
 
 Base = require('../baseClass.coffee');
+
+_ = require('lodash');
 
 Comment = (function(superClass) {
   var data;
@@ -388,7 +394,11 @@ module.exports = Comment;
 
 
 
+<<<<<<< HEAD
 },{"../baseClass.coffee":8,"lodash":11}],10:[function(require,module,exports){
+=======
+},{"../baseClass.coffee":5,"lodash":8}],7:[function(require,module,exports){
+>>>>>>> Require lodash
 var PubSub;
 
 PubSub = {
@@ -419,7 +429,11 @@ module.exports = PubSub;
 
 
 
+<<<<<<< HEAD
 },{}],11:[function(require,module,exports){
+=======
+},{}],8:[function(require,module,exports){
+>>>>>>> Require lodash
 (function (global){
 /**
  * @license
