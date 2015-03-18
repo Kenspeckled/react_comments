@@ -13,7 +13,7 @@ CommentBox = React.createClass(
               div className: "text",
                 p null, @props.comment.comment,
               p className: "attribution", "by ",
-                a href: "#non", @props.comment.name
+                a href: "#non", @props.comment.fancyName
                 " at " + @props.comment.date
 )
 

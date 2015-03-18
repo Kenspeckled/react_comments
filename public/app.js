@@ -39,7 +39,7 @@ CommentBox = React.createClass({
       className: "attribution"
     }, "by ", a({
       href: "#non"
-    }, this.props.comment.name), " at " + this.props.comment.date))))));
+    }, this.props.comment.fancyName), " at " + this.props.comment.date))))));
   }
 });
 
@@ -105,7 +105,7 @@ module.exports = CommentForm;
 
 
 },{}],4:[function(require,module,exports){
-var Comment, CommentBox, CommentForm, CommentList, c, comments, div;
+var Comment, CommentBox, CommentForm, CommentList, div;
 
 CommentBox = require('./commentBox.coffee');
 
@@ -115,38 +115,32 @@ Comment = require('../../models/comments/comment.coffee');
 
 div = React.DOM.div;
 
-c = new Comment();
-
-comments = c.comments;
-
 CommentList = React.createClass({
-  getInitialState: function() {
-    return {
-      comments: comments
-    };
+  componentDidMount: function() {
+    return Comment.listen('change', (function(_this) {
+      return function() {
+        return _this.forceUpdate();
+      };
+    })(this));
   },
   handleCommentSubmit: function(comment) {
-    comments.push(comment);
-    return this.setState({
-      comments: comments
-    });
+    return Comment.create(comment);
   },
   displayName: 'CommentList',
   render: function() {
-    var comment, index;
+    var comment;
     return div(null, (function() {
       var i, len, ref, results;
-      ref = this.state.comments;
+      ref = Comment.all();
       results = [];
-      for (index = i = 0, len = ref.length; i < len; index = ++i) {
-        comment = ref[index];
+      for (i = 0, len = ref.length; i < len; i++) {
+        comment = ref[i];
         results.push(React.createElement(CommentBox, {
-          comment: comment,
-          index: index
+          comment: comment
         }));
       }
       return results;
-    }).call(this), React.createElement(CommentForm, {
+    })(), React.createElement(CommentForm, {
       onCommentSubmit: this.handleCommentSubmit
     }));
   }
@@ -165,26 +159,69 @@ PublishSubscribe = require('./modules/pubSub.coffee');
 Base = (function() {
   function Base() {}
 
-  Base.include = function() {
-    var _prototype, args;
+  Base.extend = function() {
+    var _class, args;
     args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-    _prototype = this.prototype;
+    _class = this;
+    return args.forEach(function(module) {
+      var afterExtend, prop;
+      if (module.constructor !== Object) {
+        throw new Error('Arguments not an object or an array of objects');
+      }
+      for (prop in module) {
+        if (prop !== 'moduleName') {
+          _class[prop] = module[prop];
+        }
+      }
+      afterExtend = _class.afterExtend;
+      if (afterExtend) {
+        return afterExtend(module);
+      }
+    });
+  };
+
+  Base.prototype.afterExtend = function(module) {
+    if (!module.moduleName) {
+      throw new Error('Module defined without a name');
+    }
+    if (!this.extendedModules) {
+      this.extendedModules = [];
+    }
+    return this.extendedModules.push(module.moduleName);
+  };
+
+  Base.include = function() {
+    var _class, args;
+    args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+    _class = this;
     return args.forEach(function(module) {
       var afterInclude, prop;
       if (module.constructor !== Object) {
         throw new Error('Arguments not an object or an array of objects');
       }
-      afterInclude = _prototype.afterInclude;
       for (prop in module) {
-        _prototype[prop] = module[prop];
+        if (prop !== 'moduleName') {
+          _class.prototype[prop] = module[prop];
+        }
       }
+      afterInclude = _class.afterInclude;
       if (afterInclude) {
         return afterInclude(module);
       }
     });
   };
 
-  Base.include(PublishSubscribe);
+  Base.prototype.afterInclude = function(module) {
+    if (!module.moduleName) {
+      throw new Error('Module defined without a name');
+    }
+    if (!this.includedModules) {
+      this.includedModules = [];
+    }
+    return this.includedModules.push(module.moduleName);
+  };
+
+  Base.extend(PublishSubscribe);
 
   return Base;
 
@@ -202,36 +239,47 @@ var Base, Comment,
 Base = require('../baseClass.coffee');
 
 Comment = (function(superClass) {
+  var data;
+
   extend(Comment, superClass);
 
-  function Comment() {
-    this.comments = [
-      {
-        comment: "This is a much longer one that will go on for a few lines.<br/>It has multiple paragraphs and is full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end.",
-        name: "Joe Bloggs",
-        date: "14:23pm, 4th Dec 2010"
-      }, {
-        comment: "tHIS IS A MUCH LONGER ONE THAT WILL GO ON FOR A FEW LINES of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end.",
-        name: "Joe Bloggs",
-        date: "14:23pm, 4th Dec 2010"
-      }, {
-        comment: "This is a much longer one that will go on for a few lines.<BR/>iT HAS MULTIPLE PARAGRAPHS AND IS FULL OF WAFFLE TO PAD OUT THE COMMENT. uSUALLY, YOU JUST WISH THESE SORTS OF COMMENTS WOULD COME TO AN END.",
-        name: "Joe Bloggs",
-        date: "14:23pm, 4th Dec 2010"
-      }, {
-        comment: "This is a much longer one that will go on for a few linesaragraphs and is full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end.",
-        name: "Joe Bloggs",
-        date: "14:23pm, 4th Dec 2010"
-      }, {
-        comment: "This is a much longer one that will go on for a few lines.<br/>It has multiple paragraphs anja is full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end.",
-        name: "Joe Bloggs",
-        date: "14:23pm, 4th Dec 2010"
-      }, {
-        comment: "This is a much longer one that will go on for a one line.",
-        name: "Jane Doe",
-        date: "14:43pm, 12th Dec 2014"
-      }
-    ];
+  data = [
+    {
+      comment: "This is a much longer one that will go on for a few lines.<br/>It has multiple paragraphs and is full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end.",
+      name: "Joe Bloggs",
+      date: "14:23pm, 4th Dec 2010"
+    }, {
+      comment: "tHIS IS A MUCH LONGER ONE THAT WILL GO ON FOR A FEW LINES of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end.",
+      name: "Joe Bloggs",
+      date: "14:23pm, 4th Dec 2010"
+    }, {
+      comment: "This is a much longer one that will go on for a few lines.<BR/>iT HAS MULTIPLE PARAGRAPHS AND IS FULL OF WAFFLE TO PAD OUT THE COMMENT. uSUALLY, YOU JUST WISH THESE SORTS OF COMMENTS WOULD COME TO AN END.",
+      name: "Joe Bloggs",
+      date: "14:23pm, 4th Dec 2010"
+    }, {
+      comment: "This is a much longer one that will go on for a few linesaragraphs and is full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end.",
+      name: "Joe Bloggs",
+      date: "14:23pm, 4th Dec 2010"
+    }, {
+      comment: "This is a much longer one that will go on for a few lines.<br/>It has multiple paragraphs anja is full of waffle to pad out the comment. Usually, you just wish these sorts of comments would come to an end.",
+      name: "Joe Bloggs",
+      date: "14:23pm, 4th Dec 2010"
+    }, {
+      comment: "This is a much longer one that will go on for a one line.",
+      name: "Jane Doe",
+      date: "14:43pm, 12th Dec 2014"
+    }
+  ];
+
+  Comment.comments = _.map(data, function(c) {
+    return new Comment(c);
+  });
+
+  function Comment(obj) {
+    this.name = obj.name;
+    this.comment = obj.comment;
+    this.date = obj.date;
+    this.fancyName = "Mr Bigglesworth " + this.name + " IV";
   }
 
   Comment.prototype.toString = function() {
@@ -244,6 +292,17 @@ Comment = (function(superClass) {
     };
   };
 
+  Comment.create = function(props) {
+    var newObject;
+    newObject = new Comment(props);
+    this.comments.push(newObject);
+    return this.broadcast('change');
+  };
+
+  Comment.all = function() {
+    return this.comments;
+  };
+
   return Comment;
 
 })(Base);
@@ -253,26 +312,25 @@ module.exports = Comment;
 
 
 },{"../baseClass.coffee":5}],7:[function(require,module,exports){
-var pubSub,
-  slice = [].slice;
+var PubSub;
 
-pubSub = {
-  publish: function() {
-    var _callbackList, args, ev;
-    ev = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
+PubSub = {
+  moduleName: "PubSub",
+  broadcast: function(ev, data) {
+    var _callbackList;
     _callbackList = this._callbacks[ev];
-    if (!this.hasOwnProperty(_callbacks) || !_callbackList) {
+    if (!this.hasOwnProperty('_callbacks') || !_callbackList) {
       return this;
     }
     _callbackList.forEach((function(_this) {
       return function(fn) {
-        return fn.apply.apply(fn, [_this].concat(slice.call(args)));
+        return fn.apply(_this, data);
       };
     })(this));
     return this;
   },
-  subscribe: function(ev, fn) {
-    if (!this.hasOwnProperty(_callbacks)) {
+  listen: function(ev, fn) {
+    if (!this.hasOwnProperty('_callbacks')) {
       this._callbacks = {};
     }
     (this._callbacks[ev] || (this._callbacks[ev] = [])).push(fn);
@@ -280,7 +338,7 @@ pubSub = {
   }
 };
 
-module.exports = pubSub;
+module.exports = PubSub;
 
 
 

@@ -8,7 +8,7 @@ class Base
         throw new Error('Arguments not an object or an array of objects')
       for prop of module
         _class[prop] = module[prop] unless prop == 'moduleName'
-      afterExtend = _klass.afterExtend
+      afterExtend = _class.afterExtend
       afterExtend(module) if afterExtend
 
   afterExtend: (module) ->
