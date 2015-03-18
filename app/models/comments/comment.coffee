@@ -46,7 +46,7 @@ class Comment extends Base
   @create = (props) ->
     newObject = new Comment(props)
     @comments.push newObject
-    @broadcast('change')
+    @broadcast('changed')
     
   @all = ->
     return @comments

@@ -1,16 +1,17 @@
 CommentBox = require './commentBox.coffee'
 CommentForm = require './commentForm.coffee'
 Comment = require '../../models/comments/comment.coffee'
+ActionController = require '../../models/actionController.coffee'
 {div} = React.DOM
 
 
 CommentList = React.createClass(
   componentDidMount: ->
-    Comment.listen 'change', =>
+    Comment.listen 'changed', =>
        @forceUpdate()
 
   handleCommentSubmit: (comment) ->
-    Comment.create(comment)
+    ActionController.broadcast('commentSubmitted', {comment: comment})
 
   displayName: 'CommentList',
   render: ->

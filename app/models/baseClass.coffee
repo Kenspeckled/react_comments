@@ -1,5 +1,3 @@
-PublishSubscribe = require './modules/pubSub.coffee'
-
 class Base
   @extend = (args...) ->
     _class = this

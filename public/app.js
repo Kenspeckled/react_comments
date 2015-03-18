@@ -151,10 +151,8 @@ module.exports = CommentList;
 
 
 },{"../../models/comments/comment.coffee":6,"./commentBox.coffee":2,"./commentForm.coffee":3}],5:[function(require,module,exports){
-var Base, PublishSubscribe,
+var Base,
   slice = [].slice;
-
-PublishSubscribe = require('./modules/pubSub.coffee');
 
 Base = (function() {
   function Base() {}
@@ -221,8 +219,6 @@ Base = (function() {
     return this.includedModules.push(module.moduleName);
   };
 
-  Base.extend(PublishSubscribe);
-
   return Base;
 
 })();
@@ -231,7 +227,7 @@ module.exports = Base;
 
 
 
-},{"./modules/pubSub.coffee":7}],6:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 var Base, Comment,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -311,35 +307,4 @@ module.exports = Comment;
 
 
 
-},{"../baseClass.coffee":5}],7:[function(require,module,exports){
-var PubSub;
-
-PubSub = {
-  moduleName: "PubSub",
-  broadcast: function(ev, data) {
-    var _callbackList;
-    _callbackList = this._callbacks[ev];
-    if (!this.hasOwnProperty('_callbacks') || !_callbackList) {
-      return this;
-    }
-    _callbackList.forEach((function(_this) {
-      return function(fn) {
-        return fn.apply(_this, data);
-      };
-    })(this));
-    return this;
-  },
-  listen: function(ev, fn) {
-    if (!this.hasOwnProperty('_callbacks')) {
-      this._callbacks = {};
-    }
-    (this._callbacks[ev] || (this._callbacks[ev] = [])).push(fn);
-    return this;
-  }
-};
-
-module.exports = PubSub;
-
-
-
-},{}]},{},[1]);
+},{"../baseClass.coffee":5}]},{},[1]);
