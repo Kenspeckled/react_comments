@@ -2,7 +2,7 @@
 Comment = require '../../../client/models/comments/comment.coffee'
 
 Comment.extend {
-  @someMethod= ->
+  someMethod: ->
     console.log "###### HI ######"
 }
 

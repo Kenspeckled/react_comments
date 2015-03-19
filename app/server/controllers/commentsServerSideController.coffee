@@ -1,10 +1,11 @@
 Comment = require '../models/comments/comment.coffee'
 
 commentsServerActions = {
-  commentSubmitted: (data) ->
+
+  getSomeResponse: ->
     Comment.someMethod()
-  hello: ->
     'poo'
+
 }
 
 module.exports = commentsServerActions
