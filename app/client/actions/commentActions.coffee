@@ -1,5 +1,5 @@
-ActionHandler = require '../models/ActionHandler.coffee'
-Comment = require '../models/comments/comment.coffee'
+ActionHandler = require '../models/core/ActionHandler.coffee'
+Comment = require '../models/Comment.coffee'
 
 commentsActions = {
   commentSubmitted: (data) ->

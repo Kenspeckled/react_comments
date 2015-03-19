@@ -1,28 +1,24 @@
-PublishSubscribe = require './modules/pubSub.coffee'
+PublishSubscribe = require '../modules/pubSub.coffee'
 class Base
   @extend = (args...) ->
     _class = this
     args.forEach (module) ->
       if module.constructor != Object
         throw new Error('Arguments not an object or a list of objects')
-      if !module.moduleName
-        throw new Error('Module defined without a name')
       for prop of module
         _class[prop] = module[prop] unless prop == 'moduleName'
       _class.extendedModules = [] if !_class.extendedModules
-      _class.extendedModules.push(module.moduleName)
+      _class.extendedModules.push(module.moduleName) if !module.hasOwnProperty('moduleName')
 
   @include = (args...) ->
     _class = this
     args.forEach (module) ->
       if module.constructor != Object
         throw new Error('Arguments not an object or a list of objects')
-      if !module.moduleName
-        throw new Error('Module defined without a name')
       for prop of module
         _class.prototype[prop] = module[prop] unless prop == 'moduleName'
       _class.includedModules = [] if !_class.includedModules
-      _class.includedModules.push(module.moduleName)
+      _class.includedModules.push(module.moduleName) if !module.hasOwnProperty('moduleName')
 
   @extend PublishSubscribe
 

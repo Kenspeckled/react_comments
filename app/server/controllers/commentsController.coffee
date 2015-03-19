@@ -1,4 +1,4 @@
-Comment = require '../models/comments/comment.coffee'
+Comment = require '../models/Comment.coffee'
 
 commentsController = {
 

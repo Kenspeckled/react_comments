@@ -1,5 +1,5 @@
 Base = require './Base.coffee'
-PublishSubscribe = require './modules/pubSub.coffee'
+PublishSubscribe = require '../modules/pubSub.coffee'
 
 class ActionHandler extends Base
   @extend PublishSubscribe

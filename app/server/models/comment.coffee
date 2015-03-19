@@ -1,5 +1,5 @@
 # Modified class for server use
-Comment = require '../../../client/models/comments/comment.coffee'
+Comment = require '../../client/models/Comment.coffee'
 
 Comment.extend {
   save: ->
@@ -7,9 +7,11 @@ Comment.extend {
 
   someMethod: ->
     console.log "###### HI ######"
-
 }
-Comment.prototype.save = ->
-  "New Server Save"
+
+Comment.include {
+  save: ->
+    "New Server Save"
+}
 
 module.exports = Comment

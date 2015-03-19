@@ -1,6 +1,5 @@
+require('./actions/actionRegistry.coffee')() #registerActions
 CommentList = require('./components/comments/commentList.coffee')
-registerControllers = require('./controllers/clientControllerRegistry.coffee')
-registerControllers()
 
 
 React.render(
