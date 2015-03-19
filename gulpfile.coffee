@@ -27,7 +27,7 @@ gulp.task 'libs', ->
   .pipe gulp.dest 'public'
 
 gulp.task 'browserify', ->
-  bundler = browserify('./app/application.coffee', {})
+  bundler = browserify('./app/client/application.coffee', {})
   bundler.transform('coffeeify')
   bundle = ->
     bundler.bundle()

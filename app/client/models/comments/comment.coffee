@@ -1,3 +1,4 @@
+_ = require 'lodash'
 Base = require '../baseClass.coffee'
 
 class Comment extends Base

@@ -20,13 +20,14 @@
     "http-server": "^0.7.5",
     "jasmine-core": "^2.2.0",
     "jasmine-node": "^1.14.5",
+    "lodash": "^3.5.0",
     "vinyl-buffer": "~1.0.0",
     "vinyl-source-stream": "~1.1.0"
   },
   "scripts": {
     "postinstall": "bower install",
     "prestart": "npm install",
-    "start": "coffee server.coffee",
+    "start": "coffee app/server/server.coffee",
     "pretest": "npm install",
     "test": "jasmine-node --coffee --autotest --color --autotest spec/**/*.coffee"
   },
