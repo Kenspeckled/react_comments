@@ -5,7 +5,7 @@ PubSub = {
     _callbackList = @_callbacks[ev]
     return this if !@hasOwnProperty('_callbacks') || !_callbackList
     _callbackList.forEach (fn) =>
-      fn.apply(this, data)
+      fn.call(this, data)
     return this
 
   listen: (ev, fn) ->

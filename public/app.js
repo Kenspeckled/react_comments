@@ -1,13 +1,17 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var CommentList;
+var CommentList, registerControllers;
 
 CommentList = require('./components/comments/commentList.coffee');
+
+registerControllers = require('./controllers/controllerRegistry.coffee');
+
+registerControllers();
 
 React.render(React.createElement(CommentList, null), document.getElementById('content'));
 
 
 
-},{"./components/comments/commentList.coffee":4}],2:[function(require,module,exports){
+},{"./components/comments/commentList.coffee":4,"./controllers/controllerRegistry.coffee":6}],2:[function(require,module,exports){
 var CommentBox, a, article, div, img, p, ref, section;
 
 ref = React.DOM, div = ref.div, section = ref.section, article = ref.article, a = ref.a, img = ref.img, div = ref.div, p = ref.p;
@@ -105,7 +109,7 @@ module.exports = CommentForm;
 
 
 },{}],4:[function(require,module,exports){
-var Comment, CommentBox, CommentForm, CommentList, div;
+var ActionController, Comment, CommentBox, CommentForm, CommentList, div;
 
 CommentBox = require('./commentBox.coffee');
 
@@ -113,18 +117,22 @@ CommentForm = require('./commentForm.coffee');
 
 Comment = require('../../models/comments/comment.coffee');
 
+ActionController = require('../../models/actionController.coffee');
+
 div = React.DOM.div;
 
 CommentList = React.createClass({
   componentDidMount: function() {
-    return Comment.listen('change', (function(_this) {
+    return Comment.listen('changed', (function(_this) {
       return function() {
         return _this.forceUpdate();
       };
     })(this));
   },
   handleCommentSubmit: function(comment) {
-    return Comment.create(comment);
+    return ActionController.broadcast('commentSubmitted', {
+      comment: comment
+    });
   },
   displayName: 'CommentList',
   render: function() {
@@ -150,9 +158,84 @@ module.exports = CommentList;
 
 
 
-},{"../../models/comments/comment.coffee":6,"./commentBox.coffee":2,"./commentForm.coffee":3}],5:[function(require,module,exports){
-var Base,
+},{"../../models/actionController.coffee":7,"../../models/comments/comment.coffee":9,"./commentBox.coffee":2,"./commentForm.coffee":3}],5:[function(require,module,exports){
+var ActionController, Comment, commentsControllerActions;
+
+ActionController = require('../models/actionController.coffee');
+
+Comment = require('../models/comments/comment.coffee');
+
+commentsControllerActions = {
+  commentSubmitted: function(data) {
+    if (!data || !data.comment) {
+      throw new Error("No comment passed");
+    }
+    return Comment.create(data.comment);
+  }
+};
+
+module.exports = commentsControllerActions;
+
+
+
+},{"../models/actionController.coffee":7,"../models/comments/comment.coffee":9}],6:[function(require,module,exports){
+var ActionController, commentsControllerActions, controllerRegistry;
+
+ActionController = require('../models/actionController.coffee');
+
+commentsControllerActions = require('./commentsController.coffee');
+
+controllerRegistry = function() {
+  return ActionController.registerListenersOn(commentsControllerActions);
+};
+
+module.exports = controllerRegistry;
+
+
+
+},{"../models/actionController.coffee":7,"./commentsController.coffee":5}],7:[function(require,module,exports){
+var ActionController, Base, PublishSubscribe,
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
+
+Base = require('./baseClass.coffee');
+
+PublishSubscribe = require('./modules/pubSub.coffee');
+
+ActionController = (function(superClass) {
+  extend(ActionController, superClass);
+
+  function ActionController() {
+    return ActionController.__super__.constructor.apply(this, arguments);
+  }
+
+  ActionController.extend(PublishSubscribe);
+
+  ActionController.registerListenersOn = function(actionObj) {
+    var action, results;
+    if (actionObj.constructor !== Object) {
+      throw new Error('Arguments not an object');
+    }
+    results = [];
+    for (action in actionObj) {
+      results.push(ActionController.listen(action, actionObj[action]));
+    }
+    return results;
+  };
+
+  return ActionController;
+
+})(Base);
+
+module.exports = ActionController;
+
+
+
+},{"./baseClass.coffee":8,"./modules/pubSub.coffee":10}],8:[function(require,module,exports){
+var Base, PublishSubscribe,
   slice = [].slice;
+
+PublishSubscribe = require('./modules/pubSub.coffee');
 
 Base = (function() {
   function Base() {}
@@ -219,6 +302,8 @@ Base = (function() {
     return this.includedModules.push(module.moduleName);
   };
 
+  Base.extend(PublishSubscribe);
+
   return Base;
 
 })();
@@ -227,7 +312,7 @@ module.exports = Base;
 
 
 
-},{}],6:[function(require,module,exports){
+},{"./modules/pubSub.coffee":10}],9:[function(require,module,exports){
 var Base, Comment,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
@@ -292,7 +377,7 @@ Comment = (function(superClass) {
     var newObject;
     newObject = new Comment(props);
     this.comments.push(newObject);
-    return this.broadcast('change');
+    return this.broadcast('changed');
   };
 
   Comment.all = function() {
@@ -307,4 +392,35 @@ module.exports = Comment;
 
 
 
-},{"../baseClass.coffee":5}]},{},[1]);
+},{"../baseClass.coffee":8}],10:[function(require,module,exports){
+var PubSub;
+
+PubSub = {
+  moduleName: "PubSub",
+  broadcast: function(ev, data) {
+    var _callbackList;
+    _callbackList = this._callbacks[ev];
+    if (!this.hasOwnProperty('_callbacks') || !_callbackList) {
+      return this;
+    }
+    _callbackList.forEach((function(_this) {
+      return function(fn) {
+        return fn.call(_this, data);
+      };
+    })(this));
+    return this;
+  },
+  listen: function(ev, fn) {
+    if (!this.hasOwnProperty('_callbacks')) {
+      this._callbacks = {};
+    }
+    (this._callbacks[ev] || (this._callbacks[ev] = [])).push(fn);
+    return this;
+  }
+};
+
+module.exports = PubSub;
+
+
+
+},{}]},{},[1]);
