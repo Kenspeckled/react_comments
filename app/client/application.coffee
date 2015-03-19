@@ -1,5 +1,5 @@
 CommentList = require('./components/comments/commentList.coffee')
-registerControllers = require('./controllers/controllerRegistry.coffee')
+registerControllers = require('./controllers/clientControllerRegistry.coffee')
 registerControllers()
 
 

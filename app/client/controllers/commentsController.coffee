@@ -3,8 +3,10 @@ Comment = require '../models/comments/comment.coffee'
 
 commentsControllerActions = {
   commentSubmitted: (data) ->
-    throw new Error "No comment passed" if !data || !data.comment
-    Comment.create(data.comment)
+    if !data || !data.comment
+      throw new Error "No comment passed" 
+    c = Comment.create(data.comment)
+    console.log c.save()
 }
 
 module.exports = commentsControllerActions

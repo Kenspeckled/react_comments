@@ -44,15 +44,17 @@ class Comment extends Base
   toJSON: ->
     { name: @name }
 
+  save: ->
+    "Client Save"
+
   @create = (props) ->
+    console.log "creating"
     newObject = new Comment(props)
     @comments.push newObject
     @broadcast('changed')
+    newObject
     
   @all = ->
     return @comments
-
-
-
 
 module.exports = Comment

@@ -3,8 +3,8 @@ Comment = require '../models/comments/comment.coffee'
 commentsServerActions = {
 
   getSomeResponse: ->
-    Comment.someMethod()
-    'poo'
+    c = new Comment(name: "x", comment: "y", date: "1")
+    c.save()
 
 }
 
