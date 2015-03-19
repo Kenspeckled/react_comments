@@ -1,11 +1,12 @@
 Comment = require '../models/comments/comment.coffee'
 
-commentsServerActions = {
+commentsController = {
 
-  getSomeResponse: ->
+  getSomeResponse: (req, res) ->
     c = new Comment(name: "x", comment: "y", date: "1")
     c.save()
+    res.send "poo"
 
 }
 
-module.exports = commentsServerActions
+module.exports = commentsController

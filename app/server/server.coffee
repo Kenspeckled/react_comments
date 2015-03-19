@@ -5,9 +5,7 @@ commentsServerActions = require './controllers/commentsServerSideController.coff
 
 server.use express.static('public')
 
-server.post '/create', (req, res) ->
-  text = commentsServerActions.getSomeResponse()
-  res.send text 
+server.get '/create', commentsServerActions.getSomeResponse
 
 server = server.listen 8000, ->
   host = server.address().address
