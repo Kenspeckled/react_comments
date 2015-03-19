@@ -1,4 +1,9 @@
-commentsController = require './controllers/commentsController.coffee'
+# Allow better relative routes with explicit context
+path = require 'path'
+global.rootRequire = (name) ->
+  require path.normalize(__dirname + '/../' + name)
+
+commentsController = rootRequire 'server/controllers/commentsController.coffee'
 
 express = require("express")
 server = express()
@@ -6,7 +11,7 @@ server = express()
 
 server.use express.static('public')
 
-server.get '/create', commentsController.getSomeResponse
+server.post '/create', commentsController.getSomeResponse
 
 
 server = server.listen 8000, ->

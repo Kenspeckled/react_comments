@@ -1,16 +1,14 @@
 # Modified class for server use
-Comment = require '../../client/models/Comment.coffee'
+Comment = rootRequire 'client/models/Comment.coffee'
 
 Comment.extend {
-  save: ->
+  someClassMethod: ->
     console.log "Save"
-
-  someMethod: ->
-    console.log "###### HI ######"
 }
 
 Comment.include {
   save: ->
+    console.log "###### HI ######"
     "New Server Save"
 }
 
